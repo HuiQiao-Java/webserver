@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server>
+	<service>
+		<!-- 配置与服务器相关的参数 -->
+		<connector port="8080" maxThread="100" protocol="HTTP/1.1" />
+		<!-- 配置html文件的根目录 -->
+		<webRoot>WebContent</webRoot>
+		<!-- 配置404页面 -->
+		<not-found-page>/404.html</not-found-page>
+	</service>
+		<!-- 配置 -->
+	<type-mappings>
+		<type-mapping ext="html" type="text/html" />
+		<type-mapping ext="jpg" type="image/jpeg" />
+		<type-mapping ext="ico" type="image/ico" />
+		<type-mapping ext="png" type="image/png" />
+	</type-mappings>
+</server>
