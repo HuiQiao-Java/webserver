@@ -15,4 +15,4 @@
 		<type-mapping ext="ico" type="image/ico" />
 		<type-mapping ext="png" type="image/png" />
 	</type-mappings>
-</server>
+</server>              

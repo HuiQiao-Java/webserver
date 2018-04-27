@@ -56,7 +56,7 @@ public class HttpResponse {
 	public void respond() {
 		//发送响应头
 		//加上判断，如果没有发送可以发送，但是发送过不能再发送
-		if(!isSend) {
+//		if(!isSend) {
 			//发送响应头的这一步，因为把响应状态写死了，所以要修改
 			//因为这个响应的文字和响应状态存在一一对应关系，所以有map集合保存
 //			ps.println(protocol+" "+status+" "+"ok");
@@ -65,7 +65,7 @@ public class HttpResponse {
 			ps.println("content-length"+contentLength);
 			ps.println();
 			isSend = true;
-		}
+//		}
 		
 		try {
 			//发送响应实体

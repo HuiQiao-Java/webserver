@@ -7,6 +7,7 @@ import java.net.Socket;
 import cn.qiaoh.common.ServletContext;
 import cn.qiaoh.http.HttpRequest;
 import cn.qiaoh.http.HttpResponse;
+import cn.qiaoh.jdbc.WebJDBC;
 
 /**
  * 这个类是是用来处理客户端请求，并且负责响应客户端请求的
@@ -30,13 +31,54 @@ public class ClientHandler implements Runnable {
 		HttpRequest request = new HttpRequest(socket);
 		// 获得读取之后的uri
 		String uri = request.getUri();
-		System.out.println("打印是否正确读取了响应的uri：");
-		System.out.println(uri);
+//		System.out.println("打印是否正确读取了响应的uri：");
+//		System.out.println(uri);
+		
+		//http://localhost:8080/RegistUser?username=123&password=123
+		//http://localhost:8080/LoginUser?username=123&password=123
+		if(uri.startsWith("/RegistUser")) {
+			//完成注册功能
+			new WebJDBC(uri).regist();
+			//完成注册之后让他显示注册成功页面
+			//1.创建成功页面的file对象，并且和sockt一起传入httpresponse中
+			File file = new File(ServletContext.rootContent+"/reg_success.html");
+			HttpResponse httpResponse = new HttpResponse(socket, file);
+			//2.根据request的解析出来的后缀名ext，来对应的写入type
+			String ext = request.getExt();
+			httpResponse.setContentType(ServletContext.typeMap.get(ext));
+			//3.发送响应实体
+			httpResponse.respond();
+			return ;
+		}
+		if(uri.startsWith("/LoginUser")) {
+			//完成登陆功能
+			boolean flag = new WebJDBC(uri).login();
+			if (flag) {
+				//注册成功
+				File file = new File(ServletContext.rootContent+"/log_success.html");
+				HttpResponse httpResponse = new HttpResponse(socket, file);
+				//2.根据request的解析出来的后缀名ext，来对应的写入type
+				String ext = request.getExt();
+				httpResponse.setContentType(ServletContext.typeMap.get(ext));
+				//3.发送响应实体
+				httpResponse.respond();
+				return ;
+			}else {
+				File file = new File(ServletContext.rootContent+"/log_unsuccess.html");
+				HttpResponse httpResponse = new HttpResponse(socket, file);
+				//2.根据request的解析出来的后缀名ext，来对应的写入type
+				String ext = request.getExt();
+				httpResponse.setContentType(ServletContext.typeMap.get(ext));
+				//3.发送响应实体
+				httpResponse.respond();
+				return ;
+			}
+		}
+		
 		// 使用得到的uri完成对请求资源路径的更改
 		String path = ServletContext.rootContent + uri;
 		System.out.println(path);
 		File file = new File(path);
-		
 		//根据request解析类返回的uri创建的file对象来初始化response
 		HttpResponse httpResponse = new HttpResponse(socket, file);
 		//根据request中得到的ext参数，完成respondse中的contenttpye赋值
